@@ -131,3 +131,20 @@ class WRTPNet_Attentive(nn.Module):
         f_fuse = self.fusion(f_cat)
         res = self.tail(f_fuse)
         return iwt_init(ll + res[:, 0:3], highs + res[:, 3:])
+class WRTPNet_AdaptiveMask(nn.Module):
+    def __init__(self, in_ch=3, base=96, num_blocks=6):
+        super().__init__()
+        self.head_ll = nn.Conv2d(in_ch, base, 3, 1, 1)
+        self.head_high = nn.Conv2d(in_ch*3, base, 3, 1, 1)
+        self.body_ll = nn.Sequential(*[ResBlock(base) for _ in range(num_blocks)])
+        self.body_high = nn.Sequential(*[ResBlock(base) for _ in range(num_blocks)])
+        self.fusion = nn.Sequential(nn.Conv2d(base*2, base, 1), nn.ReLU(inplace=True), nn.Conv2d(base, base, 3, 1, 1))
+        self.tail = nn.Conv2d(base, in_ch*4, 1)
+    def forward(self, x):
+        ll, highs = dwt_init(x)
+        f_ll = self.head_ll(ll); f_high = self.head_high(highs)
+        f_ll = self.body_ll(f_ll); f_high = self.body_high(f_high)
+        f_cat = torch.cat([f_ll, f_high], dim=1)
+        f_fuse = self.fusion(f_cat)
+        res = self.tail(f_fuse)
+        return iwt_init(ll + res[:, 0:3], highs + res[:, 3:])
