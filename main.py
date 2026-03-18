@@ -19,7 +19,7 @@ if __name__ == "__main__":
     train_n = int(0.8 * n) 
     test_n = n - train_n   
     
-    train_ds, test_ds = torch.utils.data.random_split(dataset, [train_n, test_n])
+    train_ds, test_ds = torch.utils.data.Subset(dataset, range(train_n)), torch.utils.data.Subset(dataset, range(train_n, n))
     
     print(f"Dataset Split: 80% Train ({train_n} images), 20% Test/Validation ({test_n} images)")
 
