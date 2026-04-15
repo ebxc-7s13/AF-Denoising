@@ -1,55 +1,88 @@
-# AF-Denoising
-A Self-Supervised Wavelet Residual Network for Label-Free Autofluorescent Image Denoising
-WRTPNet Ablation Study: Self-Supervised Denoising Benchmarks
+FASCANet: Frequency-Aware Spatial Cross-Attention Denoising
 
-This repository contains the complete codebase for reproducing the ablation study of WRTPNet (Wavelet Residual Transformer Pyramid Network) and benchmarking it against various self-supervised denoising methods.
+A Noise-Supervised Wavelet-Domain Denoising Network for Label-Free Oral Cancer Screening from Autofluorescent Images.
+
+Overview
+
+FASCANet is a noise-supervised framework designed for the low-SNR regime of clinical Autofluorescence Imaging (AFI). It processes images in the wavelet domain to separate low-frequency structural components from high-frequency textures, ensuring that diagnostically critical metabolic signatures are not blurred during noise suppression.
+
+Architecture
+
+The FASCANet architecture is defined by three primary technical pillars:
+
+Daubechies-2 (db2) Wavelet Decomposition: Uses a single-level 2D discrete wavelet transform to provide a piecewise-linear frequency decomposition. This significantly reduces reconstruction artifacts compared to the simpler Haar basis.
+
+Spatial Cross-Attention (SCA): A bidirectional coupling mechanism between frequency branches. It generates full-resolution per-pixel attention maps to exchange edge cues and structural context every two residual blocks.
+
+Wavelet-Domain Residual Learning: The network predicts band-specific corrections (residuals) rather than full image synthesis, preserving the weak endogenous fluorophore signals required for cancer screening.
 
 Benchmark Methods
 
-This repository implements and benchmarks the following methods:
+This repository evaluates FASCANet against the following established denoising baselines:
 
-Noise2Void (N2V)
+FASCANet (Proposed): db2-based wavelet residual network with SCA.
 
-Neighbor2Neighbor (Ne2Ne)
+Noise2Void (N2V): Self-supervised blind-spot masking.
 
-Self2Self (Dropout-based inference)
+Neighbor2Neighbor (Ne2Ne): Subsampling-based self-supervision.
 
-Noise2Same (Noise2Self logic adapted)
+Self2Self: Dropout-based ensemble inference.
 
-DIP (Deep Image Prior)
+Noise2Same: Blind denoising via self-supervision.
 
-CBM3D (Conventional non-learning baseline)
+DIP (Deep Image Prior): Optimization-based reconstruction.
 
-WRTPNet Variants (Baseline, Attentive, Adaptive Masking)
+CBM3D: Traditional collaborative filtering.
 
-Structure
+Project Structure
 
-main.py: Entry point. Orchestrates data splitting, noise injection, training loops for all models, and result logging.
+main.py: Entry point for benchmarking. Orchestrates dataset splitting, noise injection (Gaussian, Poisson, Poisson-Gaussian), and coordinates evaluation across three random seeds.
 
-engine.py: Contains training loops (train_noise2void, train_ne2ne, etc.) and inference logic.
+training.py: The training engine. Contains optimized training loops for FASCANet and all self-supervised baselines.
 
-models.py: PyTorch implementations of UNet and WRTPNet variants.
+models.py: Architecture definitions. Includes the FASCANet implementation, SCA modules, and baseline UNet structures.
 
-utils.py: Configuration, metrics (PSNR, SSIM, FSIM, VIF, FOM), data loading, and noise generation.
-
-requirements.txt: Python dependencies.
-
-Installation
-
-pip install -r requirements.txt
-
+utils.py: Utilities for configuration, clinical metrics (PSNR, SSIM, FSIM, VIF, MS-SSIM, FOM), and noise generation.
 
 Usage
 
-Configure Paths: Open utils.py and modify Config.INPUT_DIR to point to your dataset directory.
+Installation
 
-Run Benchmark:
+pip install torch torchvision numpy opencv-python scikit-image PyWavelets pandas scipy
+
+
+Configuration
+
+Update paths and hardware settings in utils.py:
+
+Config.INPUT_DIR: Point to your AFI dataset.
+
+Config.OUTPUT_DIR: Define your results directory.
+
+Execution
+
+Run the full benchmarking and ablation suite:
 
 python main.py
 
 
-Output: Results, images, and CSV logs will be saved to the directory specified in Config.OUTPUT_DIR.
+Clinical Metrics
 
-Reproducibility
+The framework evaluates perceptual and structural fidelity using:
 
-The script iterates over three random seeds (42, 100, 123) and three noise types (PoissonGauss, Gaussian, Poisson) to ensure robust statistical evaluation.
+PSNR/SSIM: Standard signal fidelity.
+
+FSIM: Feature Similarity Index.
+
+VIF: Visual Information Fidelity.
+
+MS-SSIM: Multi-Scale Structural Similarity.
+
+FOM: Pratt’s Figure of Merit for edge preservation.
+
+Redox Ratio: Verification of $FAD / [NADH + FAD]$ preservation.
+
+Citation
+
+If you utilize this framework, cite the original research:
+FASCANet: Frequency-Aware Spatial Cross-Attention Denoising for Label-Free Oral Cancer Screening from Autofluorescent Images.
