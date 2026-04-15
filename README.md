@@ -41,9 +41,9 @@ This repository evaluates FASCANet against the following established denoising b
 
 *Update paths and hardware settings in utils.py:
 
-**Config.INPUT_DIR: Point to your AFI dataset.
+* Config.INPUT_DIR: Point to your AFI dataset.
 
-**Config.OUTPUT_DIR: Define your results directory.
+* Config.OUTPUT_DIR: Define your results directory.
 
 ## Execution
 
@@ -56,17 +56,17 @@ Run the full benchmarking and ablation suite:
 
 The framework evaluates perceptual and structural fidelity using:
 
-*PSNR/SSIM: Standard signal fidelity.
+* PSNR/SSIM: Standard signal fidelity.
 
-*FSIM: Feature Similarity Index.
+* FSIM: Feature Similarity Index.
 
-*VIF: Visual Information Fidelity.
+* VIF: Visual Information Fidelity.
 
-*MS-SSIM: Multi-Scale Structural Similarity.
+* MS-SSIM: Multi-Scale Structural Similarity.
 
-*FOM: Pratt’s Figure of Merit for edge preservation.
+* FOM: Pratt’s Figure of Merit for edge preservation.
 
-*Redox Ratio: Verification of $FAD / [NADH + FAD]$ preservation.
+* Redox Ratio: Verification of $FAD / [NADH + FAD]$ preservation.
 
 ## Citation
 
