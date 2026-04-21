@@ -24,6 +24,7 @@ This repository evaluates FASCANet against the following established denoising b
 * **Self2Self**: Dropout-based ensemble inference.
 * **Noise2Same**: Blind denoising via self-supervision.
 * **DIP (Deep Image Prior)**: Optimization-based reconstruction.
+* **SwinConv**: SCUnet inspired arcehtecture.
 * **CBM3D**: Traditional collaborative filtering.
 
 ## Project Structure
